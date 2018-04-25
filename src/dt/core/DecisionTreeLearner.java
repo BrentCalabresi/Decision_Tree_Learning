@@ -1,10 +1,7 @@
 package dt.core;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import dt.util.ArraySet;
 
@@ -27,6 +24,24 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	@Override
 	protected DecisionTree learn(Set<Example> examples, List<Variable> attributes, Set<Example> parent_examples) {
 	    // Must be implemented by you; the following two methods may be useful
+		/**
+		 *
+		 * if examples is empty then return P LURALITY -V ALUE (parent examples)
+		 * else if all examples have the same classification then return the classification
+		 * else if attributes is empty then return P LURALITY -V ALUE (examples)
+		 * else
+		 * A ← argmax a ∈ attributes I MPORTANCE (a, examples)
+		 * tree ← a new decision tree with root test A
+		 * for each value v k of A do
+		 * exs ← {e : e ∈ examples and e.A = v k }
+		 * subtree ← D ECISION -T REE -L EARNING (exs, attributes − A, examples)
+		 * add a branch to tree with label (A = v k ) and subtree subtree
+		 * return tree
+		 *
+		 */
+
+
+
 		return null;
 	}
 	
@@ -36,19 +51,52 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	 * I don't do the random part yet.
 	 */
 	@Override
-	protected String pluralityValue(Set<Example> examples) {
+	protected String pluralityValue(Set<Example> examples) {//todo this was written kinda late and may be pretty jank
 	    // Must be implemented by you
-		return null;
+
+		HashMap<String, Integer> outputs = new HashMap<>();
+		for (Example e: examples){
+			if (!outputs.keySet().contains(e.getOutputValue()))//if our map doesn't contain one of the output values already
+				outputs.put(e.outputValue,1);//initialize it with a frequency of 1
+
+			else{//if the output value already exsits in the map
+				int newVal = 1 + outputs.get(e.getOutputValue());//current number of occurrences (old # +1)
+				outputs.remove(e.getOutputValue());
+				outputs.put(e.getOutputValue(),newVal);//put back the string with a new frequency value
+			}
+		}//we should now have a map of unique output strings, each mapped to their respective number of occurences
+
+		for (String s: outputs.keySet()){
+			for (String s2: outputs.keySet()){
+				if (outputs.get(s) < outputs.get(s2))
+					outputs.remove(s);	//trim down map so it only contains the most frequent strings
+			}
+		}
+		ArrayList<String> values = (ArrayList<String>) outputs.keySet();
+		String mostFrequent = values.get(new Random().nextInt(values.size()));
+
+		return mostFrequent;
 	}
 	
 	/**
 	 * Returns the single unique output value among the given examples
 	 * is there is only one, otherwise null.
 	 */
+	//todo this needs to be fixed?
 	@Override
 	protected String uniqueOutputValue(Set<Example> examples) {
 	    // Must be implemented by you
-		return null;
+
+		ArrayList<String> outputs = new ArrayList<>();
+
+		for (Example e: examples){
+			if (!outputs.contains(e.getOutputValue()))
+				outputs.add(e.getOutputValue());
+		}
+		if (outputs.size() > 1)
+			return null;
+		else
+			return outputs.get(0);
 	}
 	
 	//
@@ -58,10 +106,20 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	/**
 	 * Return the subset of the given examples for which Variable a has value vk.
 	 */
+	//TODO not sure about this method
+
 	@Override
 	protected Set<Example> examplesWithValueForAttribute(Set<Example> examples, Variable a, String vk) {
 	    // Must be implemented by you
-		return null;
+
+		Set<Example> values = new HashSet<>();
+		for (Example e: examples){
+			if (e.inputValues.keySet().contains(a)){
+				if (a.domain.contains(vk))
+					values.add(e);
+			}
+		}
+		return values;
 	}
 	
 	/**
@@ -85,7 +143,13 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	@Override
 	protected int countExamplesWithValueForOutput(Set<Example> examples, String vk) {
 	    // Must be implemented by you
-		return -1;
+		int result = 0;
+		for (Example e: examples){
+			if (e.getOutputValue().equals(vk)){
+				result++;
+			}
+		}
+		return result;
 	}
 
 }
