@@ -41,11 +41,18 @@ public class WillWaitProblem extends Problem {
 	public static void main(String[] args) throws IOException {
 		Problem problem = new WillWaitProblem();
 		problem.dump();
-		Set<Example> examples = problem.readExamplesFromCSVFile(new File(args[0]));
+//		Set<Example> examples = problem.readExamplesFromCSVFile(new File(args[0]));
+		Set<Example> examples = problem.readExamplesFromCSVFile(new File("C:/Users/16kin/Documents/CSC 242/Project 4/Decision_Tree_Learning/src/dt/example/WillWait-data.txt"));
 		for (Example e : examples) {
 			System.out.println(e);
 		}
 		DecisionTree tree = new DecisionTreeLearner(problem).learn(examples);
+//		try {
+//			Thread.sleep(2000);
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		tree.dump();
 		tree.test(examples);
 	}

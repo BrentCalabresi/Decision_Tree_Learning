@@ -30,19 +30,49 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 		 * else if all examples have the same classification then return the classification
 		 * else if attributes is empty then return P LURALITY -V ALUE (examples)
 		 * else
-		 * A ← argmax a ∈ attributes I MPORTANCE (a, examples)
-		 * tree ← a new decision tree with root test A
+		 * A argmax a attributes I MPORTANCE (a, examples)
+		 * tree � a new decision tree with root test A
 		 * for each value v k of A do
-		 * exs ← {e : e ∈ examples and e.A = v k }
-		 * subtree ← D ECISION -T REE -L EARNING (exs, attributes − A, examples)
+		 * exs {e : e examples and e.A = v k }
+		 * subtree D ECISION -T REE -L EARNING (exs, attributes� A, examples)
 		 * add a branch to tree with label (A = v k ) and subtree subtree
 		 * return tree
 		 *
 		 */
-
-
-
-		return null;
+		
+		if (examples.isEmpty()){
+			String pv = pluralityValue(parent_examples);
+			return new DecisionTree(pv);
+		}
+		String uov;
+		if ((uov = uniqueOutputValue(examples)) != null){
+			return new DecisionTree(uov);
+		}
+		if (attributes.isEmpty()){
+			String pv = pluralityValue(examples);
+			return new DecisionTree(pv);
+		}
+		
+		Variable A = mostImportantVariable(attributes, parent_examples);
+		DecisionTree tree = new DecisionTree(A);
+		for (String vk : A.domain){
+			Set<Example> exs = examplesWithValueForAttribute(examples, A, vk);
+			List<Variable> attMinA = removeVariable(attributes, A);
+			DecisionTree subtree = learn(exs, attMinA, examples);
+			tree.children.add(subtree);
+		}
+		return tree;
+	}
+	
+	protected List<Variable> removeVariable(List<Variable> varList, Variable v){
+		List<Variable> listMinA = new LinkedList<>();
+		for (Variable var : varList){
+			if (var.equals(v)){
+				continue;
+			}
+			listMinA.add(var);
+		}
+		return listMinA;
 	}
 	
 	/**
@@ -59,24 +89,36 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 			if (!outputs.keySet().contains(e.getOutputValue()))//if our map doesn't contain one of the output values already
 				outputs.put(e.outputValue,1);//initialize it with a frequency of 1
 
-			else{//if the output value already exsits in the map
-				int newVal = 1 + outputs.get(e.getOutputValue());//current number of occurrences (old # +1)
-				outputs.remove(e.getOutputValue());
-				outputs.put(e.getOutputValue(),newVal);//put back the string with a new frequency value
+			else{//if the output value already exists in the map
+//				int newVal = 1 + outputs.get(e.getOutputValue());//current number of occurrences (old # +1)
+//				outputs.remove(e.getOutputValue());
+				outputs.put(e.getOutputValue(),outputs.get(e.getOutputValue()) + 1);// increment number of occurrences of this example
 			}
-		}//we should now have a map of unique output strings, each mapped to their respective number of occurences
+		}//we should now have a map of unique output strings, each mapped to their respective number of occurrences
 
-		for (String s: outputs.keySet()){
-			for (String s2: outputs.keySet()){
-				if (outputs.get(s) < outputs.get(s2))
-					outputs.remove(s);	//trim down map so it only contains the most frequent strings
-			}
+//		for (String s: outputs.keySet()){
+//			for (String s2: outputs.keySet()){
+//				if (outputs.get(s) < outputs.get(s2))
+//					outputs.remove(s);	//trim down map so it only contains the most frequent strings
+//			}
+//		}
+
+		if (outputs.size() == 0) {
+			throw new RuntimeException("outputs from plurality method is empty");
 		}
-		ArrayList<String> values = (ArrayList<String>) outputs.keySet();
-		String mostFrequent = values.get(new Random().nextInt(values.size()));
+
+		Iterator<String> outputIter = outputs.keySet().iterator();
+		String mostFrequent = outputIter.next();
+		while (outputIter.hasNext()) {
+			String val = outputIter.next();
+			if (outputs.get(val) > outputs.get(mostFrequent)) mostFrequent = val;
+		}
+
+//		ArrayList<String> values = (ArrayList<String>) outputs.keySet();
+//		String mostFrequent = values.get(new Random().nextInt(values.size()));
 
 		return mostFrequent;
-	}
+}
 	
 	/**
 	 * Returns the single unique output value among the given examples
