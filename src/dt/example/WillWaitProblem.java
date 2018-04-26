@@ -42,7 +42,7 @@ public class WillWaitProblem extends Problem {
 		Problem problem = new WillWaitProblem();
 		problem.dump();
 //		Set<Example> examples = problem.readExamplesFromCSVFile(new File(args[0]));
-		Set<Example> examples = problem.readExamplesFromCSVFile(new File("/home/jeremy/programming/csc242/Decision_Tree_Learning/src/dt/example/WillWait-data.txt"));
+		Set<Example> examples = problem.readExamplesFromCSVFile(new File("/home/BAC/Documents/College/CSC242/CSC242-project-4-Spring2018/src/dt/example/WillWait-data.txt"));
 		for (Example e : examples) {
 			System.out.println(e);
 		}
