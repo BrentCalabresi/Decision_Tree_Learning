@@ -26,15 +26,15 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	    // Must be implemented by you; the following two methods may be useful
 		/**
 		 *
-		 * if examples is empty then return P LURALITY -V ALUE (parent examples)
+		 * if examples is empty then return PLURALITY -VALUE (parent examples)
 		 * else if all examples have the same classification then return the classification
-		 * else if attributes is empty then return P LURALITY -V ALUE (examples)
+		 * else if attributes is empty then return PLURALITY -VALUE (examples)
 		 * else
-		 * A argmax a attributes I MPORTANCE (a, examples)
-		 * tree â† a new decision tree with root test A
+		 * A argmax a attributes IMPORTANCE (a, examples)
+		 * tree a new decision tree with root test A
 		 * for each value v k of A do
 		 * exs {e : e examples and e.A = v k }
-		 * subtree D ECISION -T REE -L EARNING (exs, attributes’ A, examples)
+		 * subtree DECISION -TREE -LEARNING (exs, attributes A, examples)
 		 * add a branch to tree with label (A = v k ) and subtree subtree
 		 * return tree
 		 *
@@ -44,6 +44,7 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 			String pv = pluralityValue(parent_examples);
 			return new DecisionTree(pv);
 		}
+		//System.out.println("examples: " + examples);
 		String uov;
 		if ((uov = uniqueOutputValue(examples)) != null){
 			return new DecisionTree(uov);
@@ -53,7 +54,7 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 			return new DecisionTree(pv);
 		}
 		
-		Variable A = mostImportantVariable(attributes, parent_examples);
+		Variable A = mostImportantVariable(attributes, examples);
 		DecisionTree tree = new DecisionTree(A);
 		for (String vk : A.domain){
 			Set<Example> exs = examplesWithValueForAttribute(examples, A, vk);
@@ -157,8 +158,9 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 		Set<Example> values = new HashSet<>();
 		for (Example e: examples){
 			if (e.inputValues.keySet().contains(a)){
-				if (a.domain.contains(vk))
-					values.add(e);
+//				if (a.domain.contains(vk))
+//					values.add(e);
+				if (e.inputValues.get(a).equals(vk)) values.add(e);
 			}
 		}
 		return values;

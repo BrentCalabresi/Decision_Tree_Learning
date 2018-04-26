@@ -156,6 +156,7 @@ abstract public class AbstractDecisionTreeLearner {
 		int n = examples.size();
 		for (String vk : var.domain) {
 			int nk = countExamplesWithValueForAttribute(examples, var, vk);
+			//System.out.println("var " + var + ": nk");
 			double pk = (double)nk / n;
 			result += pk*log2(pk);
 		}
@@ -170,6 +171,7 @@ abstract public class AbstractDecisionTreeLearner {
 		int n = examples.size();
 		for (String vk : problem.getOutput().domain) {
 			int nk = countExamplesWithValueForOutput(examples, vk);
+			//System.out.println("nk for " + vk + ": " + nk);
 			if (nk > 0) {
 				double pk = (double)nk / n;
 				result += pk*log2(pk);
