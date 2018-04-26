@@ -59,21 +59,33 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 			if (!outputs.keySet().contains(e.getOutputValue()))//if our map doesn't contain one of the output values already
 				outputs.put(e.outputValue,1);//initialize it with a frequency of 1
 
-			else{//if the output value already exsits in the map
-				int newVal = 1 + outputs.get(e.getOutputValue());//current number of occurrences (old # +1)
-				outputs.remove(e.getOutputValue());
-				outputs.put(e.getOutputValue(),newVal);//put back the string with a new frequency value
+			else{//if the output value already exists in the map
+//				int newVal = 1 + outputs.get(e.getOutputValue());//current number of occurrences (old # +1)
+//				outputs.remove(e.getOutputValue());
+				outputs.put(e.getOutputValue(),outputs.get(e.getOutputValue()) + 1);// increment number of occurrences of this example
 			}
-		}//we should now have a map of unique output strings, each mapped to their respective number of occurences
+		}//we should now have a map of unique output strings, each mapped to their respective number of occurrences
 
-		for (String s: outputs.keySet()){
-			for (String s2: outputs.keySet()){
-				if (outputs.get(s) < outputs.get(s2))
-					outputs.remove(s);	//trim down map so it only contains the most frequent strings
-			}
+//		for (String s: outputs.keySet()){
+//			for (String s2: outputs.keySet()){
+//				if (outputs.get(s) < outputs.get(s2))
+//					outputs.remove(s);	//trim down map so it only contains the most frequent strings
+//			}
+//		}
+
+		if (outputs.size() == 0) {
+			throw new RuntimeException("outputs from plurality method is empty");
 		}
-		ArrayList<String> values = (ArrayList<String>) outputs.keySet();
-		String mostFrequent = values.get(new Random().nextInt(values.size()));
+
+		Iterator<String> outputIter = outputs.keySet().iterator();
+		String mostFrequent = outputIter.next();
+		while (outputIter.hasNext()) {
+			String val = outputIter.next();
+			if (outputs.get(val) > outputs.get(mostFrequent)) mostFrequent = val;
+		}
+
+//		ArrayList<String> values = (ArrayList<String>) outputs.keySet();
+//		String mostFrequent = values.get(new Random().nextInt(values.size()));
 
 		return mostFrequent;
 	}
