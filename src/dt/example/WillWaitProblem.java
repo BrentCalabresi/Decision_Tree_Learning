@@ -44,6 +44,7 @@ public class WillWaitProblem extends Problem {
 		problem.dump();
 //		Set<Example> examples = problem.readExamplesFromCSVFile(new File(args[0]));
 		Set<Example> examples = problem.readExamplesFromCSVFile(new File(filepath));
+
 		for (Example e : examples) {
 			System.out.println(e);
 		}
