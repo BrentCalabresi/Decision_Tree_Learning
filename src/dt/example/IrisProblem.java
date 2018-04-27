@@ -28,7 +28,7 @@ public class IrisProblem extends Problem{
         problem.dump();
         Set<Example> examples = null;
         try {
-            examples = problem.readExamplesFromCSVFile(new File("/home/BAC/Documents/College/CSC242/CSC242-project-4-Spring2018/src/dt/example/iris.data.discrete.txt"));
+            examples = problem.readExamplesFromCSVFile(new File("C:\\Users\\16kin\\Documents\\CSC 242\\Project4New\\Decision_Tree_Learning\\src\\dt\\example\\iris.data.discrete.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         }
