@@ -64,6 +64,7 @@ abstract public class AbstractDecisionTreeLearner {
 		double maxgain = 0;
 		for (Variable a : attributes) {
 			double g = gain(a, examples);
+			//System.out.println(a + " gain: " + g);
 			if (maxvar == null || g > maxgain) {
 				maxvar = a;
 				maxgain = g;

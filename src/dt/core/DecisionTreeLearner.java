@@ -189,7 +189,7 @@ public class DecisionTreeLearner extends AbstractDecisionTreeLearner {
 	    // Must be implemented by you
 		int result = 0;
 		for (Example e: examples){
-			if (e.getOutputValue().equals(vk)){
+			if (e.getOutputValue().trim().equals(vk.trim())){
 				result++;
 			}
 		}
