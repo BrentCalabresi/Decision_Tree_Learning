@@ -34,7 +34,7 @@ public class HouseVotesProblem extends Problem {
     }
 
     public static void main(String[] args) throws IOException{
-        String filepath = "/home/jeremy/programming/csc242/Decision_Tree_Learning/src/dt/example/house-votes-84.data.mod.txt";
+        String filepath = "house-votes-84.data.mod.txt";
         Problem problem = new HouseVotesProblem();
         problem.dump();
 //		Set<Example> examples = problem.readExamplesFromCSVFile(new File(args[0]));
